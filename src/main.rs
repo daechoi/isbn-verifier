@@ -43,13 +43,8 @@ fn validate_isbn(isbn: &str) -> bool {
         .iter()
         .map(|c| c.to_digit(10).unwrap())
         .enumerate()
-        .map(|(i, digit)| {
-            println!("{} * {} = {} ", 10 - i, digit, (10 - i as u32) * digit);
-            (10 - i as u32) * digit
-        })
+        .map(|(i, digit)| (10 - i as u32) * digit)
         .sum();
-
-    println!("Sum: {}", sum);
 
     (sum + check_digit) % 11 == 0
 }
