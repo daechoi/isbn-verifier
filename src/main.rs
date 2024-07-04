@@ -23,13 +23,33 @@ fn validate_isbn(isbn: &str) -> bool {
         return false;
     }
 
-    let isbn: Vec<u32> = isbn.chars().map(|c| c.to_digit(10).unwrap_or(10)).collect();
+    let mut chars: Vec<char> = isbn.chars().collect();
+    let check_char = chars.pop().unwrap();
 
-    let sum: u32 = isbn
+    if !check_char.is_digit(10) && check_char != 'X' {
+        return false;
+    }
+    if !chars.iter().all(|c| c.is_digit(10)) {
+        return false;
+    }
+
+    let check_digit = if check_char == 'X' {
+        10
+    } else {
+        check_char.to_digit(10).unwrap()
+    };
+
+    let sum: u32 = chars
         .iter()
+        .map(|c| c.to_digit(10).unwrap())
         .enumerate()
-        .map(|(i, &digit)| (10 - i as u32) * digit)
+        .map(|(i, digit)| {
+            println!("{} * {} = {} ", 10 - i, digit, (10 - i as u32) * digit);
+            (10 - i as u32) * digit
+        })
         .sum();
 
-    sum % 11 == 0
+    println!("Sum: {}", sum);
+
+    (sum + check_digit) % 11 == 0
 }
